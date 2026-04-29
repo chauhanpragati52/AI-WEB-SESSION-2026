@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Shield | Emergency Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Safety Shield</h1>
+            <p>Your instant connection to help.</p>
+        </header>
+
+        <main>
+            <section class="panic-section">
+                <button id="panicButton" class="btn-panic">SOS</button>
+                <p id="statusMsg">Tap for emergency assistance</p>
+            </section>
+
+            <section class="info-grid">
+                <div class="card">
+                    <h3>Current Location</h3>
+                    <p id="locationText">Awaiting access...</p>
+                </div>
+                <div class="card">
+                    <h3>Emergency Contacts</h3>
+
+                    <ul id="contactList">
+                        <li>Police: 112</li>
+
+
+                        <li>Women Helpline: 1091</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+background-color: #f4f7f6;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+}
+
+.container {
+width: 90%;
+max-width: 400px;
+background: white;
+padding: 2rem;
+border-radius: 20px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+text-align: center;
+}
+
+header h1 {
+color: #d32f2f;
+margin-bottom: 5px;
+}
+
+.panic-section {
+margin: 40px 0;
+}
+
+.btn-panic {
+width: 150px;
+height: 150px;
+border-radius: 50%;
+border: none;
+background: radial-gradient(#ff5252, #d32f2f);
+color: white;
+font-size: 2rem;
+font-weight: bold;
+cursor: pointer;
+box-shadow: 0 0 20px rgba(211, 47, 47, 0.4);
+transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-panic:active {
+transform: scale(0.95);
+box-shadow: 0 0 10px rgba(211, 47, 47, 0.6);
+}
+
+.info-grid {
+text-align: left;
+}
+
+.card {
+background: #fff5f5;
+padding: 15px;
+margin-top: 15px;
+border-left: 4px solid #d32f2f;
+border-radius: 5px;
+}
+
+.card h3 {
+font-size: 0.9rem;
+color: #666;
+}
+document.getElementById('panicButton').addEventListener('click', function() {
+const status = document.getElementById('statusMsg');
+const locationDisplay = document.getElementById('locationText');
+
+status.innerText = "Alert Sent! Fetching location...";
+status.style.color = "#d32f2f";
+
+// Step 1: Get GPS Location
+if (navigator.geolocation) {
+navigator.geolocation.getCurrentPosition(
+(position) => {
+const lat = position.coords.latitude.toFixed(4);
+const long = position.coords.longitude.toFixed(4);
+locationDisplay.innerText = `Lat: ${lat}, Long: ${long}`;
+
+// In a real app, you'd send this data to a backend server here
+alert(`EMERGENCY: SOS triggered at ${lat}, ${long}`);
+},
+() => {
+locationDisplay.innerText = "Location access denied.";
+}
+);
+} else {
+locationDisplay.innerText = "Geolocation not supported.";
+}
+
+// Optional: Trigger a vibration (works on many mobile browsers)
+if (navigator.vibrate) {
+navigator.vibrate([500, 200, 500]);
+}
+});
